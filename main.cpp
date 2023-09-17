@@ -1,27 +1,20 @@
-#include <ncurses.h>
-#include <string.h>
+#include "database.h"
+#include <iostream>
 
-int main(int argc, char **argv) {
+int main() {
+  std::cout << "start main";
+  // Crie uma instância da classe Database
+  Database meuBancoDeDados("Nome do Banco de Dados", "email@exemplo.com");
+  meuBancoDeDados.render();
+  // Adicione cards às sessões existentes
+  meuBancoDeDados.addCardToSession("To do", "Fazer tarefa 1");
+  meuBancoDeDados.addCardToSession("To do", "Fazer tarefa 2");
 
-  // Mensagem aparece na tela
-  char mesg[] = "Digite uma mensagem: ";
-  char str[80];
+  meuBancoDeDados.addCardToSession("Doing", "Trabalhar na tarefa 3");
 
-  // para armazenar o número de linhas e o número de colunas da tela
-  int row, col;
+  meuBancoDeDados.addCardToSession("Done", "Concluir tarefa 4");
 
-  // inicia a ncurses
-  initscr();
-
-  // obtém o número de linhas e colunas
-  getmaxyx(stdscr, row, col);
-
-  // imprime a mensagem no centro da tela
-  mvprintw(row / 2, (col - strlen(mesg)) / 2, "%s", mesg);
-  getstr(str);
-  mvprintw(LINES - 2, 0, "Você digitou: %s", str);
-  getch();
-  endwin();
+  // Renderize as sessões e cards
 
   return 0;
 }
