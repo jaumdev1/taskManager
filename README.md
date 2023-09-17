@@ -1,2 +1,2 @@
-# taskManager - grello seu kanban no terminal
+# taskManager - grello, seu kanban no terminal
 
