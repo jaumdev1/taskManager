@@ -6,6 +6,7 @@ class Card {
 public:
   Card(std::string cardName);
   std::string cardName;
+  bool selecionado;
 
 private:
   std::string titulo;

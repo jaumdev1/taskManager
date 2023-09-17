@@ -12,9 +12,9 @@ public:
   void addCard(std::string cardName);
   void render(int startX, int startY, int width, int height);
   std::string nome;
+  std::vector<Card *> cards;
 
 private:
-  std::vector<Card *> cards;
 };
 
 #endif
