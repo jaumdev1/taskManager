@@ -1,19 +1,23 @@
 #include "database.h"
+#include "inputManager.h"
 #include <iostream>
-
 int main() {
   std::cout << "start main";
-  // Crie uma instância da classe Database
-  Database meuBancoDeDados("Nome do Banco de Dados", "email@exemplo.com");
-  // Adicione cards às sessões existentes
-  meuBancoDeDados.addCardToSession("To do", "Fazer tarefa 1");
-  meuBancoDeDados.addCardToSession("To do", "Fazer tarefa 2");
 
-  meuBancoDeDados.addCardToSession("Doing", "Trabalhar na tarefa 3");
+  Database *meuBancoDeDados =
+      new Database("Nome do Banco de Dados", "email@exemplo.com");
+  InputManager *inputManager = new InputManager(meuBancoDeDados);
 
-  meuBancoDeDados.addCardToSession("Done", "Concluir tarefa 4");
-  meuBancoDeDados.render();
-  // Renderize as sessões e cards
+  meuBancoDeDados->addCardToSession("To do", "Fazer tarefa 1");
+  meuBancoDeDados->addCardToSession("To do", "Fazer tarefa 2");
+
+  meuBancoDeDados->addCardToSession("Doing", "Trabalhar na tarefa 3");
+
+  meuBancoDeDados->addCardToSession("Done", "Concluir tarefa 4");
+
+  inputManager->StartInputThread();
+
+  meuBancoDeDados->render();
 
   return 0;
 }

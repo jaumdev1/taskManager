@@ -6,9 +6,9 @@
 Database::Database(std::string nome, std::string email)
     : nome(nome), email(email) {
   createSessions();
+  sessaoSelecionada = 0;
+  cardSelecionado = 0;
 }
-int cardSelecionado = 0;
-int sessaoSelecionada = 0;
 
 void Database::createSessions() {
   Session *newSession1 = new Session("To do");
@@ -31,15 +31,125 @@ void Database::addCardToSession(std::string sessionName, std::string cardName) {
       break;
     }
   }
+  // sessions[0]->cards[0]->selecionado = true;
+}
+void Database::MoveUp() {
+
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
+  cardSelecionado--;
+  if (cardSelecionado < 0) {
+    cardSelecionado = sessions[sessaoSelecionada]->cards.size() - 1;
+  }
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
+}
+void Database::MoveDown() {
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
+  cardSelecionado++;
+  if (cardSelecionado >= sessions[sessaoSelecionada]->cards.size()) {
+    cardSelecionado = 0;
+  }
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
+}
+void Database::MoveLeft() {
+  if (sessions[sessaoSelecionada]->cards.size() == 0) {
+    bool proxSession = false;
+    while (!proxSession) {
+      sessaoSelecionada--;
+      if (sessaoSelecionada >= sessions.size()) {
+        sessaoSelecionada = 0;
+      }
+      if (sessions[sessaoSelecionada]->cards.size() > 0) {
+        proxSession = true;
+      }
+    }
+  }
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
+  sessaoSelecionada--;
+  if (sessaoSelecionada < 0) {
+    sessaoSelecionada = sessions.size() - 1;
+  }
+  cardSelecionado = 0;
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
+}
+void Database::MoveRight() {
+  if (sessions[sessaoSelecionada]->cards.size() == 0) {
+    bool proxSession = false;
+    while (!proxSession) {
+      sessaoSelecionada++;
+      if (sessaoSelecionada >= sessions.size()) {
+        sessaoSelecionada = 0;
+      }
+      if (sessions[sessaoSelecionada]->cards.size() > 0) {
+        proxSession = true;
+      }
+    }
+  }
+
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
+  sessaoSelecionada++;
+  if (sessaoSelecionada >= sessions.size()) {
+    sessaoSelecionada = 0;
+  }
+  cardSelecionado = 0;
+  sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
+}
+void Database::MoveCardRight() {
+  if (sessions[sessaoSelecionada]->cards.size() == 0) {
+    bool proxSession = false;
+    while (!proxSession) {
+      sessaoSelecionada++;
+      if (sessaoSelecionada >= sessions.size()) {
+        sessaoSelecionada = 0;
+      }
+      if (sessions[sessaoSelecionada]->cards.size() > 0) {
+        proxSession = true;
+      }
+    }
+  }
+
+  Card *card = sessions[sessaoSelecionada]->cards[cardSelecionado];
+  sessions[sessaoSelecionada]->cards[cardSelecionado] = nullptr;
+  sessaoSelecionada++;
+  if (sessaoSelecionada >= sessions.size()) {
+    sessaoSelecionada = 0;
+  }
+
+  sessions[sessaoSelecionada]->cards.push_back(card);
+  int positionCardSelected = sessions[sessaoSelecionada]->cards.size() - 1;
+  cardSelecionado = positionCardSelected;
+}
+void Database::MoveCardLeft() {
+  if (sessions[sessaoSelecionada]->cards.size() == 0) {
+    bool proxSession = false;
+    while (!proxSession) {
+      sessaoSelecionada--;
+      if (sessaoSelecionada >= sessions.size()) {
+        sessaoSelecionada = 0;
+      }
+      if (sessions[sessaoSelecionada]->cards.size() > 0) {
+        proxSession = true;
+      }
+    }
+  }
+
+  Card *card = sessions[sessaoSelecionada]->cards[cardSelecionado];
+  sessions[sessaoSelecionada]->cards[cardSelecionado] = nullptr;
+  sessaoSelecionada--;
+  if (sessaoSelecionada >= sessions.size()) {
+    sessaoSelecionada = 0;
+  }
+
+  sessions[sessaoSelecionada]->cards.push_back(card);
+  int positionCardSelected = sessions[sessaoSelecionada]->cards.size() - 1;
+  cardSelecionado = positionCardSelected;
 }
 
 void Database::render() {
 
   initscr();
-  keypad(stdscr, TRUE);
   noecho();
   cbreak();
-  curs_set(0); // Esconde o cursor
+  curs_set(0);
 
   int altura, largura;
   getmaxyx(stdscr, altura, largura);
@@ -47,7 +157,6 @@ void Database::render() {
   int altura_borda = 2;
 
   while (1) {
-    clear();
 
     for (int i = 0; i < sessions.size(); ++i) {
       int startX = i * largura / sessions.size();
@@ -55,46 +164,7 @@ void Database::render() {
       int height = altura;
       sessions[i]->render(startX, 0, width, height);
     }
-
-    int ch = getch();
-    switch (ch) {
-    case KEY_UP:
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-      cardSelecionado--;
-      if (cardSelecionado < 0) {
-        cardSelecionado = sessions[sessaoSelecionada]->cards.size() - 1;
-      }
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
-      break;
-    case KEY_DOWN:
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-      cardSelecionado++;
-      if (cardSelecionado >= sessions[sessaoSelecionada]->cards.size()) {
-        cardSelecionado = 0;
-      }
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
-      break;
-    case KEY_LEFT:
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-      sessaoSelecionada--;
-      if (sessaoSelecionada < 0) {
-        sessaoSelecionada = sessions.size() - 1;
-      }
-      cardSelecionado = 0;
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
-      break;
-    case KEY_RIGHT:
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-      sessaoSelecionada++;
-      if (sessaoSelecionada >= sessions.size()) {
-        sessaoSelecionada = 0;
-      }
-      cardSelecionado = 0;
-      sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
-      break;
-    case 27:
-      endwin();
-    }
+    refresh();
   }
 
   endwin();

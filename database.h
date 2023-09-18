@@ -2,6 +2,7 @@
 #define database_h
 
 #include "session.h"
+#include <curses.h>
 #include <string>
 #include <vector>
 
@@ -13,10 +14,19 @@ public:
   void addCardToSession(std::string sessionName, std::string cardName);
   void render();
   std::string nome;
+  void MoveUp();
+  void MoveDown();
+  void MoveLeft();
+  void MoveRight();
+  void MoveCardRight();
+  void MoveCardLeft();
+  WINDOW *window;
 
 private:
   std::string email;
   std::vector<Session *> sessions;
+  int sessaoSelecionada;
+  int cardSelecionado;
 };
 
 #endif

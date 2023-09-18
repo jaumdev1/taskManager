@@ -10,23 +10,24 @@ void Session::addCard(std::string cardName) {
 void Session::render(int startX, int startY, int width, int height) {
 
   WINDOW *win = newwin(height, width, startY, startX);
+
   box(win, 0, 0);
   refresh();
   wprintw(win, nome.c_str());
 
   int y = 1;
-  for (size_t i = 0; i < cards.size(); ++i) {
+  if (cards.size() > 0) {
+    for (size_t i = 0; i < cards.size(); ++i) {
+      if (cards[i]) {
+        if (cards[i]->selecionado == true) {
+          wattron(win, A_REVERSE);
+        }
 
-    if (cards[i]->selecionado == true) {
-      wattron(win, A_REVERSE);
-      start_color(); // Inicie o modo de cores
-
-      init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+        mvwprintw(win, y, 1, cards[i]->cardName.c_str());
+        wattroff(win, A_REVERSE);
+        y++;
+      }
     }
-
-    mvwprintw(win, y, 1, cards[i]->cardName.c_str());
-    wattroff(win, A_REVERSE);
-    y++;
   }
 
   wrefresh(win);
