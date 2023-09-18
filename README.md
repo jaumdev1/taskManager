@@ -1,4 +1,4 @@
 # taskManager - grello, seu kanban no terminal
 
-GnuTrello - Grello
+GnuGrello - Grello
 
