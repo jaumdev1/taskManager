@@ -33,9 +33,9 @@ void InputManager::InputThread() {
     }
 
     if (navegationMode) {
-      ProcessInput(ch);
-    } else {
-      ProcessEditInput(ch);
+      InputManager::notifyObservers(ch);
+    } else if (!navegationMode) {
+      InputManager::notifyObserversEditMode(ch);
     }
   }
 }

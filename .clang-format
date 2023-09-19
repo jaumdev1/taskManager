@@ -1,0 +1,6 @@
+Language:        Cpp
+AccessModifierOffset: -1
+SeparateDefinitionBlocks: Always
+EmptyLineBeforeAccessModifier: LogicalBlock
+IncludeBlocks: Merge
+KeepEmptyLinesAtTheStartOfBlocks: false

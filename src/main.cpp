@@ -8,6 +8,7 @@ int main() {
       new Database("Nome do Banco de Dados", "email@exemplo.com");
   InputManager *inputManager = new InputManager(meuBancoDeDados);
 
+  inputManager->addObserver(meuBancoDeDados);
   meuBancoDeDados->addCardToSession("To do", "Fazer tarefa 1");
   meuBancoDeDados->addCardToSession("To do", "Fazer tarefa 2");
 

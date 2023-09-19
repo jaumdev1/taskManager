@@ -2,9 +2,10 @@
 #define INPUT_MANAGER_H
 
 #include "database.h"
+#include "inputObservable.h"
 #include <ncurses.h>
 #include <queue>
-class InputManager {
+class InputManager : public InputObservable {
 public:
   InputManager(Database *db);
   ~InputManager();

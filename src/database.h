@@ -1,14 +1,16 @@
 #ifndef database_h
 #define database_h
 
+#include "inputObserver.h"
 #include "session.h"
 #include <curses.h>
 #include <string>
 #include <vector>
 
-class Database {
+class Database : public InputObserver {
 public:
   Database(std::string nome, std::string email);
+  ~Database();
   void createSessions();
   void newSession(std::string sessionName);
   void addCardToSession(std::string sessionName, std::string cardName);
@@ -21,6 +23,8 @@ public:
   void MoveCardRight();
   void MoveCardLeft();
   WINDOW *window;
+  void onInputEvent(int input) override;
+  void onInputEventEditMode(int input) override;
 
 private:
   std::string email;
