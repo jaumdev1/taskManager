@@ -8,12 +8,14 @@
 #include <vector>
 
 class Database : public InputObserver {
-public:
+ public:
   Database(std::string nome, std::string email);
   ~Database();
   void createSessions();
   void newSession(std::string sessionName);
-  void addCardToSession(std::string sessionName, std::string cardName);
+  void addCardToSession(std::string sessionName, std::string cardName,
+                        std::string titulo, std::string observacao,
+                        std::time_t date);
   void render();
   std::string nome;
   void MoveUp();
@@ -26,7 +28,7 @@ public:
   void onInputEvent(int input) override;
   void onInputEventEditMode(int input) override;
 
-private:
+ private:
   std::string email;
   std::vector<Session *> sessions;
   int sessaoSelecionada;

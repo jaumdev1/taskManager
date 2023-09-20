@@ -1,20 +1,21 @@
 #ifndef SESSION_H
 #define SESSION_H
 
+#include "card.h"
 #include <string>
 #include <vector>
 
-#include "card.h"
-
 class Session {
-public:
+ public:
   Session(std::string sessionName);
-  void addCard(std::string cardName);
+  ~Session();
+  void addCard(std::string cardName, std::string titulo, std::string observacao,
+               std::time_t date);
   void render(int startX, int startY, int width, int height);
   std::string nome;
   std::vector<Card *> cards;
 
-private:
+ private:
 };
 
 #endif

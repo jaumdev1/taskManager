@@ -3,12 +3,15 @@
 #include <iostream>
 #include <ncurses.h>
 #include <ostream>
+
 Database::Database(std::string nome, std::string email)
     : nome(nome), email(email) {
   createSessions();
   sessaoSelecionada = 0;
   cardSelecionado = 0;
 }
+
+Database::~Database() {}
 
 void Database::createSessions() {
   Session *newSession1 = new Session("To do");
@@ -24,17 +27,19 @@ void Database::newSession(std::string sessionName) {
   sessions.push_back(new Session(sessionName));
 }
 
-void Database::addCardToSession(std::string sessionName, std::string cardName) {
+void Database::addCardToSession(std::string sessionName, std::string cardName,
+                                std::string titulo, std::string observacao,
+                                std::time_t date) {
   for (auto session : sessions) {
     if (session->nome == sessionName) {
-      session->addCard(cardName);
+      session->addCard(cardName, titulo, observacao, date);
       break;
     }
   }
   // sessions[0]->cards[0]->selecionado = true;
 }
-void Database::MoveUp() {
 
+void Database::MoveUp() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
   cardSelecionado--;
   if (cardSelecionado < 0) {
@@ -42,6 +47,7 @@ void Database::MoveUp() {
   }
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
 }
+
 void Database::MoveDown() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
   cardSelecionado++;
@@ -50,6 +56,7 @@ void Database::MoveDown() {
   }
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
 }
+
 void Database::MoveLeft() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
   sessaoSelecionada--;
@@ -66,6 +73,7 @@ void Database::MoveLeft() {
   cardSelecionado = 0;
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
 }
+
 void Database::MoveRight() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
   sessaoSelecionada++;
@@ -81,6 +89,7 @@ void Database::MoveRight() {
   cardSelecionado = 0;
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
 }
+
 void Database::MoveCardRight() {
   if (sessions[sessaoSelecionada]->cards.size() == 0) {
     bool proxSession = false;
@@ -111,6 +120,7 @@ void Database::MoveCardRight() {
   int positionCardSelected = sessions[sessaoSelecionada]->cards.size() - 1;
   cardSelecionado = positionCardSelected;
 }
+
 void Database::MoveCardLeft() {
   if (sessions[sessaoSelecionada]->cards.size() == 0) {
     bool proxSession = false;
@@ -141,6 +151,7 @@ void Database::MoveCardLeft() {
   int positionCardSelected = sessions[sessaoSelecionada]->cards.size() - 1;
   cardSelecionado = positionCardSelected;
 }
+
 // method is override
 void Database::onInputEvent(int input) {
   switch (input) {
@@ -158,6 +169,7 @@ void Database::onInputEvent(int input) {
     break;
   }
 }
+
 // method is override too
 void Database::onInputEventEditMode(int input) {
   switch (input) {
@@ -171,7 +183,6 @@ void Database::onInputEventEditMode(int input) {
 }
 
 void Database::render() {
-
   initscr();
   noecho();
   cbreak();
@@ -183,7 +194,6 @@ void Database::render() {
   int altura_borda = 2;
 
   while (1) {
-
     for (int i = 0; i < sessions.size(); ++i) {
       int startX = i * largura / sessions.size();
       int width = largura / sessions.size();
