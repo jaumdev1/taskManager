@@ -18,7 +18,7 @@ bug encontrado na primeira versão de segmentation fault, já resolvido!
 <cpp>
 
 
-# # Comandos de Teclas do Teclado
+# # Comandos de Teclado
 
 # #( N ) -> Entrar no Modo de Navegação caso você esteja no Modo de Edição ou Modo de Movimentação (ESC).
 * Use as setas do teclado para navegar no Modo de Movimentação;
