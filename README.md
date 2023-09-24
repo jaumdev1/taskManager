@@ -20,13 +20,13 @@ bug encontrado na primeira versão de segmentation fault, já resolvido!
 
 # # Comandos de Teclas do Teclado
 
-( N ) -> Entrar no Modo de Navegação caso você esteja no Modo de Edição ou Modo de Movimentação (ESC).
+# #( N ) -> Entrar no Modo de Navegação caso você esteja no Modo de Edição ou Modo de Movimentação (ESC).
 * Use as setas do teclado para navegar no Modo de Movimentação;
   
-( ESC ) -> Entrar no Modo de Edição ou Modo de Movimentação. 
+# # ( ESC ) -> Entrar no Modo de Edição ou Modo de Movimentação. 
 * Use as setas do teclado (SETAS DE ESQUERDA E DIREITA) para navegar no Modo de Movimentação;
 
-( F1 ) -> Entrar no de Linha de comando.
+# #( F1 ) -> Entrar no de Linha de comando.
 * :add (ID da Sessão) nome do card;
 * :del (ID da Sessão) id do card;
 * :del (ID da Sessão)
