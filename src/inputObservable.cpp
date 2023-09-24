@@ -23,8 +23,15 @@ void InputObservable::notifyObservers(int input) {
     observer->onInputEvent(input);
   }
 }
+
 void InputObservable::notifyObserversEditMode(int input) {
   for (InputObserver *observer : observers) {
     observer->onInputEventEditMode(input);
+  }
+}
+
+void InputObservable::notifyObserversCommand(int input) {
+  for (InputObserver *observer : observers) {
+    observer->onInputEventCommand(input);
   }
 }

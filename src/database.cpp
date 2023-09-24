@@ -1,5 +1,6 @@
 #include "database.h"
 #include <algorithm>
+#include <cstddef>
 #include <iostream>
 #include <ncurses.h>
 #include <ostream>
@@ -9,6 +10,7 @@ Database::Database(std::string nome, std::string email)
   createSessions();
   sessaoSelecionada = 0;
   cardSelecionado = 0;
+  this->commandLine = new CommandLine();
 }
 
 Database::~Database() {}
@@ -59,16 +61,8 @@ void Database::MoveDown() {
 
 void Database::MoveLeft() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-  sessaoSelecionada--;
-  if (sessaoSelecionada < 0) {
-    sessaoSelecionada = sessions.size() - 1;
-  }
-  if (sessions[sessaoSelecionada]->cards.size() == 0) {
-    sessaoSelecionada--;
-    if (sessaoSelecionada < 0) {
-      sessaoSelecionada = sessions.size() - 1;
-    }
-  }
+
+  NextSession(KEY_LEFT);
 
   cardSelecionado = 0;
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
@@ -76,16 +70,8 @@ void Database::MoveLeft() {
 
 void Database::MoveRight() {
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = false;
-  sessaoSelecionada++;
-  if (sessaoSelecionada >= sessions.size()) {
-    sessaoSelecionada = 0;
-  }
-  if (sessions[sessaoSelecionada]->cards.size() == 0) {
-    sessaoSelecionada++;
-    if (sessaoSelecionada >= sessions.size()) {
-      sessaoSelecionada = 0;
-    }
-  }
+
+  NextSession(KEY_RIGHT);
   cardSelecionado = 0;
   sessions[sessaoSelecionada]->cards[cardSelecionado]->selecionado = true;
 }
@@ -107,10 +93,8 @@ void Database::MoveCardRight() {
   Card *card = sessions[sessaoSelecionada]->cards[cardSelecionado];
 
   sessions[sessaoSelecionada]->cards.erase(
-      std::remove(sessions[sessaoSelecionada]->cards.begin(),
-                  sessions[sessaoSelecionada]->cards.end(),
-                  sessions[sessaoSelecionada]->cards[cardSelecionado]),
-      sessions[sessaoSelecionada]->cards.end());
+      sessions[sessaoSelecionada]->cards.begin() + cardSelecionado);
+
   sessaoSelecionada++;
   if (sessaoSelecionada >= sessions.size()) {
     sessaoSelecionada = 0;
@@ -136,12 +120,10 @@ void Database::MoveCardLeft() {
   }
 
   Card *card = sessions[sessaoSelecionada]->cards[cardSelecionado];
+
   sessions[sessaoSelecionada]->cards.erase(
-      std::remove(sessions[sessaoSelecionada]->cards.begin(),
-                  sessions[sessaoSelecionada]->cards.end(),
-                  sessions[sessaoSelecionada]->cards[cardSelecionado]),
-      sessions[sessaoSelecionada]->cards.end());
-  sessions[sessaoSelecionada]->cards[cardSelecionado] = nullptr;
+      sessions[sessaoSelecionada]->cards.begin() + cardSelecionado);
+
   sessaoSelecionada--;
   if (sessaoSelecionada >= sessions.size()) {
     sessaoSelecionada = 0;
@@ -150,6 +132,29 @@ void Database::MoveCardLeft() {
   sessions[sessaoSelecionada]->cards.push_back(card);
   int positionCardSelected = sessions[sessaoSelecionada]->cards.size() - 1;
   cardSelecionado = positionCardSelected;
+}
+
+void Database::NextSession(int arrowCode) {
+  if (arrowCode == KEY_LEFT) {
+    do {
+      if ((sessaoSelecionada - 1) < 0) {
+        sessaoSelecionada = sessions.size() - 1;
+
+      } else {
+        sessaoSelecionada--;
+      }
+    } while (sessions[sessaoSelecionada]->cards.size() == 0);
+
+  } else if (arrowCode == KEY_RIGHT) {
+    do {
+      if ((sessaoSelecionada + 1) > (sessions.size() - 1)) {
+        sessaoSelecionada = 0;
+
+      } else {
+        sessaoSelecionada++;
+      }
+    } while (sessions[sessaoSelecionada]->cards.size() == 0);
+  }
 }
 
 // method is override
@@ -182,6 +187,10 @@ void Database::onInputEventEditMode(int input) {
   }
 }
 
+void Database::onInputEventCommand(int input) {
+  commandLine->InputEvent(input);
+};
+
 void Database::render() {
   initscr();
   noecho();
@@ -198,8 +207,9 @@ void Database::render() {
       int startX = i * largura / sessions.size();
       int width = largura / sessions.size();
       int height = altura;
-      sessions[i]->render(startX, 0, width, height);
+      sessions[i]->render(startX, 0, width, (height - 3));
     }
+    commandLine->render(0, altura - 3, largura, 3);
     refresh();
   }
 

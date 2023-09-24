@@ -18,7 +18,7 @@ void Session::render(int startX, int startY, int width, int height) {
   werase(win);
   wbkgd(win, COLOR_PAIR(2));
   box(win, 0, 0);
-  refresh();
+  // refresh();
   std::string nomeSession = nome;
 
   for (char c : nomeSession) {

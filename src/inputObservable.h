@@ -2,15 +2,17 @@
 #define inputObservable_h
 #include "inputObserver.h"
 #include <vector>
+
 class InputObservable {
-public:
+ public:
   InputObservable();
   void addObserver(InputObserver *observer);
   void removeObserver(InputObserver *observer);
   void notifyObservers(int input);
   void notifyObserversEditMode(int input);
+  void notifyObserversCommand(int input);
 
-private:
+ private:
   std::vector<InputObserver *> observers;
 };
 #endif

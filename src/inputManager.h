@@ -5,8 +5,9 @@
 #include "inputObservable.h"
 #include <ncurses.h>
 #include <queue>
+
 class InputManager : public InputObservable {
-public:
+ public:
   InputManager(Database *db);
   ~InputManager();
   void StartInputThread();
@@ -14,7 +15,7 @@ public:
   void ProcessEditInput(int ch);
   int GetNextInput();
 
-private:
+ private:
   Database *db;
   pthread_t inputThreadID;
   std::queue<int> inputBuffer;

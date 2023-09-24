@@ -18,22 +18,34 @@ void *InputManager::InputThreadWrapper(void *data) {
 void InputManager::InputThread() {
   initscr();
   cbreak();
-  noecho();
-  bool navegationMode = true;
 
+  bool navegationMode = true;
+  bool commandLine = false;
   while (true) {
     keypad(stdscr, TRUE);
     int ch = getch();
-    if (ch == 'n' && !navegationMode) {
-      navegationMode = true;
 
-    } else if (ch == 27 && navegationMode) {
-      navegationMode = false;
+    if (!commandLine) {
+      switch (ch) {
+      case 'n':
+        navegationMode = true;
+        break;
+      case 27:
+        navegationMode = false;
+        break;
+      }
     }
-    if (navegationMode) {
-      InputManager::notifyObservers(ch);
-    } else if (!navegationMode) {
-      InputManager::notifyObserversEditMode(ch);
+    // comandline
+    if (ch == KEY_F(1))
+      commandLine = !commandLine;
+
+    if (commandLine) {
+      InputManager::notifyObserversCommand(ch);
+    } else {
+      if (navegationMode)
+        InputManager::notifyObservers(ch);
+      else
+        InputManager::notifyObserversEditMode(ch);
     }
   }
 }
