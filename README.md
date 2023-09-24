@@ -12,3 +12,11 @@ bug encontrado na primeira versão de segmentation fault, já resolvido!
 
 
 ![commandLine](https://github.com/jaumdev1/taskManager/assets/56412536/864acd59-9a79-4450-9177-5621f99edd64)
+
+-libs
+<ncurses>
+<cpp>
+
+
+
+
